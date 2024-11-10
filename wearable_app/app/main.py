@@ -33,7 +33,6 @@ app.add_middleware(
 
 # Set up Jinja2 templates and static files
 templates = Jinja2Templates(directory="wearable_app/app/templates")
-app.mount("/static", StaticFiles(directory="wearable_app/app/static"), name="static")
 
 # Load the trained model and label encoders
 model = joblib.load("wearable_app/app/sleep_disorder_model.pkl")
