@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Data Form</title>
+    <style>
+        /* Global Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #007acc, #00cc88);
+            color: #333;
+            position: relative;
+        }
+
+        /* Form Container */
+        .form-container {
+            width: 90%;
+            max-width: 500px;
+            background-color: #fff;
+            padding: 2em;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            animation: fadeIn 1s ease;
+        }
+
+        .form-container h1 {
+            font-size: 2em;
+            color: #007acc;
+            margin-bottom: 1em;
+        }
+
+        /* Form Styles */
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-top: 1em;
+            font-weight: bold;
+            color: #007acc;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            padding: 0.8em;
+            margin-top: 0.5em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus {
+            border-color: #007acc;
+            outline: none;
+            box-shadow: 0 0 8px rgba(0, 122, 204, 0.3);
+        }
+
+        /* Button Styles */
+        .submit-btn {
+            margin-top: 1.5em;
+            padding: 0.8em;
+            background-color: #00cc88;
+            color: #fff;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-weight: bold;
+        }
+
+        .submit-btn:hover {
+            background-color: #009f66;
+        }
+
+        /* Result Display Card */
+        .result-card {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 1em;
+            margin-top: 1.5em;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: left;
+            color: #007acc;
+        }
+
+        .result-card h2 {
+            font-size: 1.5em;
+            color: #005a9c;
+            margin-bottom: 0.5em;
+            text-align: center;
+        }
+
+        .result-card .result-item {
+            margin-bottom: 0.5em;
+            font-size: 1.1em;
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5em;
+            background-color: #eef6fb;
+            border-radius: 5px;
+        }
+
+        .result-label {
+            font-weight: bold;
+            color: #007acc;
+        }
+
+        /* Additional Pages Buttons */
+        #extra-buttons {
+            margin-top: 2em;
+        }
+
+        #extra-buttons button {
+            margin: 0.5em;
+            padding: 0.8em;
+            background-color: #007acc;
+            color: #fff;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-weight: bold;
+        }
+
+        #extra-buttons button:hover {
+            background-color: #005a9c;
+        }
+
+        /* Logout Button */
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 15px;
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .logout-btn:hover {
+            background-color: #cc0000;
+        }
+
+        /* Fade-in Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Logout Button -->
+    <a href="/logout" class="logout-btn">Logout</a>
+
+    <div class="form-container">
+        <h1>Submit User Data</h1>
+        <form id="user-data-form">
+            <label for="gender">Gender:</label>
+            <input type="text" id="gender" name="gender" required>
+
+            <label for="age">Age:</label>
+            <input type="number" id="age" name="age" required>
+
+            <label for="occupation">Occupation:</label>
+            <input type="text" id="occupation" name="occupation" required>
+
+            <label for="sleep_duration">Sleep Duration:</label>
+            <input type="number" step="0.1" id="sleep_duration" name="sleep_duration" required>
+
+            <label for="physical_activity">Physical Activity:</label>
+            <input type="number" step="0.1" id="physical_activity" name="physical_activity" required>
+
+            <label for="bmi">BMI:</label>
+            <input type="number" step="0.1" id="bmi" name="bmi" required>
+
+            <label for="daily_steps">Daily Steps:</label>
+            <input type="number" id="daily_steps" name="daily_steps" required>
+
+            <label for="stress_level">Stress Level:</label>
+            <input type="number" id="stress_level" name="stress_level" required>
+
+            <label for="blood_pressure">Blood Pressure:</label>
+            <input type="number" id="blood_pressure" name="blood_pressure" required>
+
+            <button type="button" class="submit-btn" onclick="submitForm()">Submit</button>
+        </form>
+
+        <!-- Display areas for results in a card layout -->
+        <div class="result-card" id="results-card" style="display: none;">
+            <h2>Prediction Results</h2>
+            <div class="result-item">
+                <span class="result-label">Status:</span>
+                <span id="save-result"></span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Predicted Sleep Disorder:</span>
+                <span id="prediction-result"></span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Sleep Quality:</span>
+                <span id="sleep-quality-result"></span>
+            </div>
+        </div>
+
+        <!-- New buttons for additional pages -->
+        <div id="extra-buttons">
+            <button onclick="openPage('blogs')">Blogs</button>
+            <button onclick="openPage('recommendations')">Recommendations</button>
+            <button onclick="openPage('insights')">Insights</button>
+        </div>
+    </div>
+
+    <script>
+        async function submitForm() {
+            const formData = new FormData(document.getElementById("user-data-form"));
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                const saveResponse = await fetch("/save-user-data", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data),
+                });
+
+                if (!saveResponse.ok) {
+                    throw new Error("Failed to save user data");
+                }
+
+                document.getElementById("save-result").innerText = "User data saved successfully.";
+
+                const predictResponse = await fetch("/predict-sleep-disorder", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data),
+                });
+
+                const predictionResult = await predictResponse.json();
+                document.getElementById("prediction-result").innerText = predictionResult.predicted_sleep_disorder;
+
+                const qualityResponse = await fetch("/calculate-sleep-quality", {
+                    method: "GET"
+                });
+
+                const qualityResult = await qualityResponse.json();
+                document.getElementById("sleep-quality-result").innerText = `${qualityResult.sleep_quality} (Wake Count: ${qualityResult.wake_count})`;
+
+                document.getElementById("results-card").style.display = "block";
+            } catch (error) {
+                console.error("Error:", error);
+                document.getElementById("save-result").innerText = "Error processing your request.";
+            }
+        }
+
+        function openPage(page) {
+            let url = "";
+            switch (page) {
+                case 'blogs':
+                    url = "/blogs";
+                    break;
+                case 'recommendations':
+                    url = "/recommendations";
+                    break;
+                case 'insights':
+                    url = "/insights";
+                    break;
+            }
+            window.location.href = url;
+        }
+    </script>
+</body>
+
+</html>

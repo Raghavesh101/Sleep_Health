@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommendations Chatbot</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #007acc, #00cc88);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .chat-container {
+            width: 100%;
+            max-width: 600px;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeIn 0.8s ease-in-out;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 1.8em;
+            color: #007acc;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        /* Logout Button */
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 8px 16px;
+            background-color: #ff5c5c;
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.3s;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .logout-btn:hover {
+            background-color: #e60000;
+        }
+
+        .chat-box {
+            width: 100%;
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 10px;
+            background-color: #f4f4f9;
+            border-radius: 10px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+        }
+
+        .chat-message {
+            max-width: 80%;
+            padding: 10px 15px;
+            margin: 10px 0;
+            border-radius: 20px;
+            font-size: 0.95em;
+            line-height: 1.4;
+            word-wrap: break-word;
+            position: relative;
+        }
+
+        .user-message {
+            background-color: #007acc;
+            color: #ffffff;
+            margin-left: auto;
+            border-bottom-right-radius: 0;
+        }
+
+        .bot-message {
+            background-color: #f1f1f1;
+            color: #333333;
+            margin-right: auto;
+            border-bottom-left-radius: 0;
+        }
+
+        .input-container {
+            width: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        #user-input {
+            flex-grow: 1;
+            padding: 10px;
+            font-size: 1em;
+            border-radius: 20px;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-right: 10px;
+            transition: border-color 0.3s;
+        }
+
+        #user-input:focus {
+            outline: none;
+            border-color: #007acc;
+            box-shadow: 0 2px 8px rgba(0, 122, 204, 0.2);
+        }
+
+        #send-btn {
+            padding: 10px 20px;
+            background-color: #00cc88;
+            color: #ffffff;
+            font-size: 1em;
+            font-weight: bold;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        #send-btn:hover {
+            background-color: #009f66;
+        }
+
+        /* Smooth fade-in animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="chat-container">
+        <button class="logout-btn" onclick="logout()">Logout</button>
+        <h1>Health Recommendations Chatbot</h1>
+        <div class="chat-box" id="chat-box">
+            <!-- Chat messages will appear here -->
+        </div>
+        <div class="input-container">
+            <input type="text" id="user-input" placeholder="Ask for recommendations..." />
+            <button id="send-btn" onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        async function sendMessage() {
+            const userInput = document.getElementById("user-input");
+            const message = userInput.value.trim();
+
+            if (message === "") return;
+
+            // Display the user message in the chat
+            addMessageToChat("user-message", message);
+
+            // Clear the input box
+            userInput.value = "";
+
+            // Send the message to the backend for a response
+            try {
+                const response = await fetch("/recommendations-chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ query: message }),
+                });
+
+                const data = await response.json();
+                addMessageToChat("bot-message", data.response);
+            } catch (error) {
+                console.error("Error:", error);
+                addMessageToChat("bot-message", "Sorry, something went wrong.");
+            }
+        }
+
+        function addMessageToChat(type, message) {
+            const chatBox = document.getElementById("chat-box");
+            const messageElem = document.createElement("div");
+            messageElem.classList.add("chat-message", type);
+            messageElem.textContent = message;
+            chatBox.appendChild(messageElem);
+
+            // Scroll to the latest message
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function logout() {
+            // Redirect to logout endpoint
+            window.location.href = "/logout";
+        }
+    </script>
+</body>
+
+</html>

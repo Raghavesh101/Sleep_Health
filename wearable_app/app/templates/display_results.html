@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display Results</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <h1>Your Submitted Data</h1>
+    
+    <div id="user-data">
+        <p><strong>Gender:</strong> {{ user_data.gender }}</p>
+        <p><strong>Age:</strong> {{ user_data.age }}</p>
+        <p><strong>Occupation:</strong> {{ user_data.occupation }}</p>
+        <p><strong>Sleep Duration:</strong> {{ user_data.sleep_duration }}</p>
+        <p><strong>Physical Activity:</strong> {{ user_data.physical_activity }}</p>
+        <p><strong>BMI:</strong> {{ user_data.bmi }}</p>
+        <p><strong>Daily Steps:</strong> {{ user_data.daily_steps }}</p>
+        <p><strong>Stress Level:</strong> {{ user_data.stress_level }}</p>
+        <p><strong>Blood Pressure:</strong> {{ user_data.blood_pressure }}</p>
+    </div>
+
+    <h2>Results</h2>
+    <p><strong>Predicted Sleep Disorder:</strong> {{ sleep_disorder }}</p>
+    <p><strong>Calculated Sleep Quality:</strong> {{ sleep_quality }}</p>
+</body>
+
+</html>

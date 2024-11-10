@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthcare & Wellness Blogs</title>
+    
+    <!-- Embedded CSS -->
+    <style>
+        /* General Styling */
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #007acc, #00cc88);
+            background-size: cover;
+            background-position: center;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .nav-buttons {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+            padding: 0 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #ddd;
+        }
+
+        .logout-btn {
+            background-color: #ff4d4d;
+            color: white;
+            font-weight: bold;
+        }
+
+        .logout-btn:hover {
+            background-color: #cc0000;
+        }
+
+        .back-btn {
+            background-color: #007acc;
+            color: white;
+            font-weight: bold;
+        }
+
+        .back-btn:hover {
+            background-color: #005a9c;
+        }
+
+        .page-title {
+            font-size: 2.5em;
+            color: #fff;
+            text-align: center;
+            font-family: 'Brush Script MT', cursive;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        .blogs-container {
+            width: 100%;
+            max-width: 1200px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .section-title {
+            font-size: 2em;
+            color: #555;
+            font-family: 'Brush Script MT', cursive;
+        }
+
+        .loading {
+            font-size: 1.5em;
+            color: #888;
+            display: none;
+        }
+
+        .no-blogs {
+            font-size: 1.2em;
+            color: #888;
+            display: none;
+        }
+
+        .blogs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .blog-card {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-align: center;
+        }
+
+        .blog-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .blog-card h3 {
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .blog-card a {
+            color: teal;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .blog-card a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Buttons -->
+    <div class="nav-buttons">
+        <button class="back-btn" onclick="goBack()">Back</button>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+
+    <!-- Page Header -->
+    <h1 class="page-title">Healthcare & Wellness Blogs</h1>
+    <p class="subtitle">"Empowering your journey to better health every day!"</p>
+
+    <!-- Blogs Container -->
+    <div id="blogs-container" class="blogs-container">
+        <h2 class="section-title">Featured Articles</h2>
+        <div id="loading" class="loading">Loading...</div>
+        <div id="blogs" class="blogs-grid"></div>
+        <div id="no-blogs" class="no-blogs">No blogs available or API issue.</div>
+    </div>
+
+    <!-- Embedded JavaScript -->
+    <script>
+        // Function to fetch blogs from the API
+        async function fetchBlogs() {
+            const loadingElement = document.getElementById("loading");
+            const noBlogsElement = document.getElementById("no-blogs");
+            const blogsContainer = document.getElementById("blogs");
+
+            // Show loading spinner
+            loadingElement.style.display = "block";
+            noBlogsElement.style.display = "none";
+            blogsContainer.innerHTML = "";
+
+            try {
+                const response = await fetch(
+                    'https://api.gdeltproject.org/api/v2/doc/doc?query=healthcare&mode=ArtList&format=json'
+                );
+
+                if (!response.ok) throw new Error(`Error: ${response.status}`);
+                const data = await response.json();
+
+                const blogs = data.articles.map((article) => ({
+                    title: article.title,
+                    url: article.url,
+                }));
+
+                if (blogs.length === 0) {
+                    noBlogsElement.style.display = "block";
+                } else {
+                    // Populate blogs
+                    blogs.forEach((blog) => {
+                        const blogCard = document.createElement("div");
+                        blogCard.classList.add("blog-card");
+
+                        const blogTitle = document.createElement("h3");
+                        blogTitle.textContent = blog.title;
+                        blogCard.appendChild(blogTitle);
+
+                        const blogLink = document.createElement("a");
+                        blogLink.href = blog.url;
+                        blogLink.target = "_blank";
+                        blogLink.textContent = "Read More";
+                        blogCard.appendChild(blogLink);
+
+                        blogsContainer.appendChild(blogCard);
+                    });
+                }
+            } catch (error) {
+                console.error("Error fetching blog data:", error);
+                noBlogsElement.style.display = "block";
+            } finally {
+                // Hide loading spinner
+                loadingElement.style.display = "none";
+            }
+        }
+
+        // Function to go back to the previous page
+        function goBack() {
+            window.history.back();
+        }
+
+        // Function to handle logout
+        async function logout() {
+            try {
+                // Send request to the backend to handle logout and clear session
+                await fetch("/logout", { method: "GET" });
+                // Redirect to the login page after successful logout
+                window.location.href = "/login";
+            } catch (error) {
+                console.error("Error logging out:", error);
+            }
+        }
+
+        // Fetch blogs on page load
+        fetchBlogs();
+    </script>
+</body>
+</html>
