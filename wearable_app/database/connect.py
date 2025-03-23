@@ -11,4 +11,4 @@ if not mongo_uri:
     raise ValueError("MONGO_URI is not set in the .env file")
 
 client = MongoClient(mongo_uri)
-db = client["sleep_quality_db"] 
+db = client["sleep_quality_db"]

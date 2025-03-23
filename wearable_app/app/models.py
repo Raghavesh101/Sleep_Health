@@ -1,8 +1,6 @@
-# app/models.py
 from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel
-
 
 class UserData(BaseModel):
     gender: str
@@ -19,9 +17,8 @@ class PredictionData(BaseModel):
     timestamp: datetime
     sleep_disorder: str
     sleep_quality: str
-    sleep_duration: float  # Add sleep_duration to the data mode
+    sleep_duration: float
 
-# Inherit from UserData if it has the same fields
 class UserPredictionData(UserData):
     pass
 

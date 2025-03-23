@@ -3,16 +3,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import JSONResponse, HTMLResponse, RedirectResponse
-from .models import UserData, UserPredictionData, GyroscopeData, PredictionData
-from ..database.connect import db
+from wearable_app.app.models import UserData, UserPredictionData, GyroscopeData, PredictionData
+from wearable_app.database.connect import db
 from datetime import datetime
 import joblib
 import logging
-import random
 import openai
-import requests
-from dotenv import load_dotenv
 import os
+from dotenv import load_dotenv
 
 # Load environment variables from .env file
 load_dotenv()
@@ -50,7 +48,6 @@ async def login_page(request: Request):
 @app.post("/login")
 async def login(request: Request, response: Response, username: str = Form(...), password: str = Form(...)):
     user = db.users.find_one({"username": username, "password": password})
-
     if user:
         response.set_cookie(key="authenticated", value="true")
         response.set_cookie(key="username", value=username)
@@ -89,9 +86,7 @@ async def save_gyroscope_data(gyroscope_data: GyroscopeData):
 @app.get("/calculate-sleep-quality")
 async def calculate_sleep_quality():
     records = db.gyroscope_data.find({}, {"distance": 1})
-    records_list = list(records)
-
-    wake_count = sum(1 for record in records_list if record.get("distance", 0) > THRESHOLD_DISTANCE)
+    wake_count = sum(1 for record in records if record.get("distance", 0) > THRESHOLD_DISTANCE)
 
     if wake_count > 5:
         sleep_quality = "Very Poor"
@@ -165,7 +160,7 @@ async def save_predictions(prediction_data: PredictionData):
         db.predictions.insert_one(prediction_data.dict())
         return JSONResponse(status_code=200, content={"message": "Predictions saved successfully"})
     except Exception as e:
-        print(f"Error saving predictions: {e}")
+        logging.error(f"Error saving predictions: {e}")
         raise HTTPException(status_code=500, detail="Failed to save predictions")
 
 # Serve the insights page
